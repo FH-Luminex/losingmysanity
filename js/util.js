@@ -74,6 +74,7 @@ const format = (number, precision = 0, length = 4) => {
         default: break;
     }
 
+    if (number <= 0 || !Number.isFinite(number)) return number + "";
     let exp = Math.floor(Math.log10(number));
     if (notation == "engineering") exp = Math.floor(exp / 3) * 3;
     let man = number / 10 ** exp;
@@ -89,6 +90,7 @@ format.decimal = (number, precision = 0) => {
 }
 
 format.significant = (number, precision = 0) => {
+    if (number <= 0 || !Number.isFinite(number)) return number + "";
     let base = 10 ** Math.ceil(precision - Math.log10(number) - 1);
     return (Math.floor(number * base) / base).toLocaleString("en-US", {
         minimumSignificantDigits: precision,
@@ -97,6 +99,7 @@ format.significant = (number, precision = 0) => {
 }
 
 format.suffix = (number, precision, list, base) => {
+    if (number <= 0 || !Number.isFinite(number) || base <= 0) return null;
     let digits = Math.log10(base)
     let target = Math.floor(Math.log10(number) / digits);
     digits = Math.ceil(digits);
