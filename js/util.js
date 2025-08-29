@@ -1,5 +1,6 @@
 
 // Decimal.js global and Math aliasing
+console.log('[util.js] window.Decimal at load:', typeof window.Decimal, window.Decimal);
 const Decimal = window.Decimal;
 
 // Alias Math functions to Decimal equivalents
