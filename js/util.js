@@ -20,8 +20,14 @@ Math.log10 = x => new Decimal(x).log10().toNumber();
 // ----- Formatting
 
 const format = (number, precision = 0, length = 4) => {
-    if (!Number.isFinite(number)) return number + "";
-    if (number < 0) return "-";
+    if (!Number.isFinite(number)) {
+        console.warn('[format] Non-finite number:', number);
+        return '-';
+    }
+    if (number < 0) {
+        console.warn('[format] Negative number:', number);
+        return '-';
+    }
 
     let precision2 = Math.max(precision, 3);
 
@@ -74,7 +80,11 @@ const format = (number, precision = 0, length = 4) => {
         default: break;
     }
 
-    if (number <= 0 || !Number.isFinite(number)) return number + "";
+    if (number === 0) return '0';
+    if (number < 0 || !Number.isFinite(number)) {
+        console.warn('[format] Invalid number for exponent:', number);
+        return '-';
+    }
     let exp = Math.floor(Math.log10(number));
     if (notation == "engineering") exp = Math.floor(exp / 3) * 3;
     let man = number / 10 ** exp;
@@ -90,7 +100,11 @@ format.decimal = (number, precision = 0) => {
 }
 
 format.significant = (number, precision = 0) => {
-    if (number <= 0 || !Number.isFinite(number)) return number + "";
+    if (number === 0) return '0';
+    if (number < 0 || !Number.isFinite(number)) {
+        console.warn('[format.significant] Invalid number:', number);
+        return '-';
+    }
     let base = 10 ** Math.ceil(precision - Math.log10(number) - 1);
     return (Math.floor(number * base) / base).toLocaleString("en-US", {
         minimumSignificantDigits: precision,
@@ -99,12 +113,16 @@ format.significant = (number, precision = 0) => {
 }
 
 format.suffix = (number, precision, list, base) => {
-    if (number <= 0 || !Number.isFinite(number) || base <= 0) return null;
+    if (number === 0) return '0';
+    if (number < 0 || !Number.isFinite(number) || base <= 0) {
+        console.warn('[format.suffix] Invalid number/base:', number, base);
+        return '-';
+    }
     let digits = Math.log10(base)
     let target = Math.floor(Math.log10(number) / digits);
     digits = Math.ceil(digits);
     let suffix = list(target);
-    if (suffix == null) return null;
+    if (suffix == null) return '-';
     return format.significant(number / base ** target, precision, digits) + suffix;
 }
 format.suffix.simple = (number, list) => {
