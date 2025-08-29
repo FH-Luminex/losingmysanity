@@ -1,3 +1,17 @@
+
+// Ensure decimal.js is loaded first
+if (!window.Decimal) {
+    var script = document.createElement('script');
+    script.src = 'js/lib/decimal.js';
+    script.onload = function() {
+        console.log('[main.js] decimal.js loaded manually.');
+    };
+    document.head.appendChild(script);
+    // Optionally, you could block further execution until loaded, but for now just log
+} else {
+    console.log('[main.js] decimal.js already loaded.');
+}
+
 let elms = {}
 
 // Emergency hard reset on Down Arrow key (loads before anything else, no confirmation)
